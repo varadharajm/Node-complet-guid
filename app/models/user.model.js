@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const userModel = mongoose.Schema({
     first_name:{type:String, minLength:3, maxLength:15, required:true},
     last_name :{type:String, minLength:3, maxLength:15, required:true},
-    dob:{type:Date,required:true},
+    dob:{type:Date,required:true,default: '12/10/1990' },
     email:{type:String, required:true, lowercase:true},
     password:{type:String, required:true, minLength:8},
     town:{ type:String, required:true, minLength:5, maxLength:50},
