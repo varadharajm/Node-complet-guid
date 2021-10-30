@@ -11,4 +11,4 @@ const userValidation = [
     body('mobile').isNumeric().notEmpty().withMessage('Mobile number is must').isLength({min:10,max:10}).withMessage('Enter proper number'),
 
 ]
-module.exports.userValidation = userValidation;
+module.exports.userValidation = userValidation; 
