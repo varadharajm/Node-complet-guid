@@ -8,7 +8,7 @@ const userModel = mongoose.Schema({
     email:{type:String, required:true, lowercase:true},
     password:{type:String, required:true, minLength:8},
     //role:{enum:[Admin,Hr,SuperAdmin,Technical, DigitalMarketing, Other]},
-    town:{ type:String, required:true, minLength:5, maxLength:50},
+    town:{ type:String, required:true, minLength:3, maxLength:50},
     pincode:{ type:Number, required:true, maxLength:6, minLength:6},
     mobile:{ type:Number, required:true, minLength:10, maxLength:10},
     status:{type:Boolean,default:true, required:true},
