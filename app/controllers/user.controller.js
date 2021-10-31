@@ -10,28 +10,60 @@ const newUser = async(req, res) =>{
     try{
         const error = validationResult(req);
         
+        
         if(!error.isEmpty()){
             res.status(422).json({ error :error.array()});
             return;
         }
+        
         const existinguser = await userModel.findOne({email: req.body.email});
         if(!existinguser){
             const hashPassword = await hashGenerate(req.body.password);
             const userData = new userModel({
                 first_name:req.body.first_name,
-                last_name :req.body.last_name,
+                last_name:req.body.last_name,
                 dob:req.body.dob,
                 email:req.body.email,
                 password:hashPassword,
-                town:req.body.town,
-                pincode:req.body.pincode,
-                mobile:req.body.mobile
+                mobile:req.body.mobile,
+                role:req.body.role,
+                designationn:req.body.designationn,
+                department:req.body.department,
+                date_of_joining:req.body.date_of_joining,
+                bank_info:{
+                        accound_number:req.body.bank_info.accound_number,
+                        bank_name:req.body.bank_info.bank_name,
+                        branch_name:req.body.bank_info.branch_name,
+                        ifsc_code:req.body.bank_info.ifsc_code
+                    },
+                pan_number:req.body.pan_number,
+                aadhar_number:req.body.aadhar_number,
+                persional_email:req.body.persional_email,
+                address:req.body.address,
+                city:req.body.city,
+                pincode:req.body.pincode,   
+                second_mobile:req.body.second_mobile,
+                emergency_contacts:{
+                    mobile:req.body.emergency_contacts.mobile,
+                    name:req.body.emergency_contacts.name,
+                    relationship:req.body.emergency_contacts.relationship,
+                },
+                second_emergency_contacts:{
+                        mobile:req.body.second_emergency_contacts.mobile,
+                        name:req.body.second_emergency_contacts.name,
+                        relationship:req.body.second_emergency_contacts.relationship
+                },
+                system_data:{
+                        brand_name:req.body.system_data.brand_name,
+                        brand_model:req.body.system_data.brand_model,
+                        system_number:req.body.system_data.system_number
+                    }
             });
             const save = await userData.save();
-            res.send(save);
+            res.status(200).send(save);
             
         }else{
-        res.status(402).send("user existe")
+        res.status(202).send("user existe")
     }
     }catch{
         res.status(400).json({error : "data not found"});
@@ -44,11 +76,11 @@ const userLogin = async(req, res) =>{
     try{
         const existinguser = await userModel.findOne({email: req.body.email});
         if(!existinguser){
-            res.send("Invaild Email");
+            res.status(400).send("Invaild Email");
         }else{
             const checkuser = await hashvalidate(req.body.password, existinguser.password);
             if(!checkuser){
-                res.send("Invalid Password");
+                res.status(400).send("Invalid Password");
             }else if(existinguser.status === true){
                 const login_data =new user_logindata({
                     id:existinguser._id,
@@ -56,22 +88,22 @@ const userLogin = async(req, res) =>{
                     email:existinguser.email
                 }).save();
               const token = await generateToken(existinguser.email);
-              res.send({emai : existinguser.email, message : "Login Successfully", token});
+              res.status(200).send({emai : existinguser.email, message : "Login Successfully", token});
                 
             }else{
             
-                res.send("Entery resticted");
+                res.status(401).send("Entery resticted");
             }
         }
 }catch (error){
-        res.send(error);
+        res.status(202).send(error);
     };
 };
 
 // To find logined user data
 const userData = async(req, res) =>{
     const userdata = await userModel.findOne({email:req.body.email});
-    res.send(userdata);
+    res.status(200).send(userdata);
 }
 
 
@@ -82,7 +114,7 @@ const home = (req, res) =>{
 
 // error page for wrong address 
 const error = (req, res) =>{
-    res.status(200).json({message: "404 Page Not Found"});
+    res.status(404).json({message: "404 Page Not Found"});
 };
 
 module.exports = {home, error, newUser, userLogin, userData};
